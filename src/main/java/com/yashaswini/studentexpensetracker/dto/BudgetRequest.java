@@ -18,8 +18,10 @@ public class BudgetRequest {
     @NotNull(message = "User ID is required")
     private Long userId;
 
+
     public BudgetRequest() {
     }
+
 
     public Double getAmount() {
         return amount;
@@ -29,6 +31,7 @@ public class BudgetRequest {
         this.amount = amount;
     }
 
+
     public Integer getMonth() {
         return month;
     }
@@ -37,6 +40,7 @@ public class BudgetRequest {
         this.month = month;
     }
 
+
     public Integer getYear() {
         return year;
     }
@@ -44,6 +48,7 @@ public class BudgetRequest {
     public void setYear(Integer year) {
         this.year = year;
     }
+
 
     public Long getUserId() {
         return userId;

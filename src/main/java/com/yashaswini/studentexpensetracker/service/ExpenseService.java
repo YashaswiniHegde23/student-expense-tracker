@@ -1,29 +1,32 @@
 package com.yashaswini.studentexpensetracker.service;
 
-import com.yashaswini.studentexpensetracker.dto.ExpenseRequest;
-import com.yashaswini.studentexpensetracker.model.Expense;
-import com.yashaswini.studentexpensetracker.repository.ExpenseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.yashaswini.studentexpensetracker.model.User;
-import com.yashaswini.studentexpensetracker.repository.UserRepository;
-import com.yashaswini.studentexpensetracker.exception.ResourceNotFoundException;
 import com.yashaswini.studentexpensetracker.dto.DashboardResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import com.yashaswini.studentexpensetracker.dto.ExpenseRequest;
+import com.yashaswini.studentexpensetracker.exception.ResourceNotFoundException;
+import com.yashaswini.studentexpensetracker.model.Expense;
+import com.yashaswini.studentexpensetracker.model.User;
+import com.yashaswini.studentexpensetracker.repository.ExpenseRepository;
+import com.yashaswini.studentexpensetracker.repository.UserRepository;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import java.util.List;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExpenseService {
@@ -34,10 +37,21 @@ public class ExpenseService {
     @Autowired
     private UserRepository userRepository;
 
+    private User getLoggedInUser() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User Not Found"));
+    }
+
     public String addExpense(ExpenseRequest request) {
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+        User user = getLoggedInUser();
 
         Expense expense = new Expense();
 
@@ -54,82 +68,158 @@ public class ExpenseService {
     }
 
     public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
+
+        User user = getLoggedInUser();
+
+        return expenseRepository.findByUserId(user.getId());
     }
 
     public Expense getExpenseById(Long id) {
-        return expenseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Expense Not Found"));
-    }
 
-    public String deleteExpense(Long id) {
+        User user = getLoggedInUser();
 
         Expense expense = expenseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Expense Not Found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Expense Not Found"));
 
-        expenseRepository.delete(expense);
+        if (!expense.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Expense Not Found");
+        }
 
-        return "Expense Deleted Successfully";
+        return expense;
     }
 
-    public String updateExpense(Long id, ExpenseRequest request) {
+    public String updateExpense(
+            Long id,
+            ExpenseRequest request) {
+
+        User user = getLoggedInUser();
 
         Expense expense = expenseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Expense Not Found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Expense Not Found"));
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+        if (!expense.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Expense Not Found");
+        }
 
         expense.setTitle(request.getTitle());
         expense.setCategory(request.getCategory());
         expense.setAmount(request.getAmount());
         expense.setDate(request.getDate());
         expense.setDescription(request.getDescription());
-        expense.setUser(user);
 
         expenseRepository.save(expense);
 
         return "Expense Updated Successfully";
     }
 
-    public List<Expense> getExpensesByCategory(String category) {
+    public String deleteExpense(Long id) {
 
-        return expenseRepository.findByCategory(category);
+        User user = getLoggedInUser();
+
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Expense Not Found"));
+
+        if (!expense.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Expense Not Found");
+        }
+
+        expenseRepository.delete(expense);
+
+        return "Expense Deleted Successfully";
     }
 
-    public List<Expense> searchExpensesByTitle(String title) {
+    public List<Expense> getExpensesByCategory(
+            String category) {
 
-        return expenseRepository.findByTitleContainingIgnoreCase(title);
+        User user = getLoggedInUser();
+
+        return expenseRepository.findByCategoryAndUserId(
+                category,
+                user.getId()
+        );
     }
 
-    public List<Expense> getExpensesByDate(LocalDate date) {
+    public List<Expense> searchExpensesByTitle(
+            String title) {
 
-        return expenseRepository.findByDate(date);
+        User user = getLoggedInUser();
+
+        return expenseRepository
+                .findByTitleContainingIgnoreCaseAndUserId(
+                        title,
+                        user.getId()
+                );
     }
 
-    public List<Expense> getExpensesBetweenDates(LocalDate startDate, LocalDate endDate) {
+    public List<Expense> getExpensesByDate(
+            LocalDate date) {
 
-        return expenseRepository.findByDateBetween(startDate, endDate);
+        User user = getLoggedInUser();
+
+        return expenseRepository.findByDateAndUserId(
+                date,
+                user.getId()
+        );
     }
 
-    public List<Expense> getExpensesGreaterThan(Double amount) {
+    public List<Expense> getExpensesBetweenDates(
+            LocalDate startDate,
+            LocalDate endDate) {
 
-        return expenseRepository.findByAmountGreaterThan(amount);
+        User user = getLoggedInUser();
+
+        return expenseRepository.findByDateBetweenAndUserId(
+                startDate,
+                endDate,
+                user.getId()
+        );
     }
 
-    public List<Expense> getExpensesLessThan(Double amount) {
+    public List<Expense> getExpensesGreaterThan(
+            Double amount) {
 
-        return expenseRepository.findByAmountLessThan(amount);
+        User user = getLoggedInUser();
+
+        return expenseRepository
+                .findByAmountGreaterThanAndUserId(
+                        amount,
+                        user.getId()
+                );
     }
 
-    public List<Expense> getExpensesBetweenAmounts(Double min, Double max) {
+    public List<Expense> getExpensesLessThan(
+            Double amount) {
 
-        return expenseRepository.findByAmountBetween(min, max);
+        User user = getLoggedInUser();
+
+        return expenseRepository
+                .findByAmountLessThanAndUserId(
+                        amount,
+                        user.getId()
+                );
+    }
+
+    public List<Expense> getExpensesBetweenAmounts(
+            Double min,
+            Double max) {
+
+        User user = getLoggedInUser();
+
+        return expenseRepository
+                .findByAmountBetweenAndUserId(
+                        min,
+                        max,
+                        user.getId()
+                );
     }
 
     public Double getTotalExpenses(Long userId) {
 
-        Double total = expenseRepository.getTotalExpensesByUserId(userId);
+        Double total =
+                expenseRepository.getTotalExpensesByUserId(userId);
 
         return total != null ? total : 0.0;
     }
@@ -139,33 +229,58 @@ public class ExpenseService {
         return expenseRepository.getExpenseCountByUserId(userId);
     }
 
-    public Map<String, Double> getCategoryWiseSummary(Long userId) {
+    public Map<String, Double> getCategoryWiseSummary(
+            Long userId) {
 
-        List<Object[]> results = expenseRepository.getCategoryWiseSummary(userId);
+        List<Object[]> results =
+                expenseRepository.getCategoryWiseSummary(userId);
 
-        Map<String, Double> summary = new HashMap<>();
+        Map<String, Double> summary =
+                new HashMap<>();
 
         for (Object[] row : results) {
-            summary.put((String) row[0], (Double) row[1]);
+
+            summary.put(
+                    (String) row[0],
+                    (Double) row[1]
+            );
         }
 
         return summary;
     }
 
-    public Double getMonthlyExpenseSummary(Long userId, int month, int year) {
+    public Double getMonthlyExpenseSummary(
+            Long userId,
+            int month,
+            int year) {
 
-        Double total = expenseRepository.getMonthlyExpenseSummary(userId, month, year);
+        Double total =
+                expenseRepository.getMonthlyExpenseSummary(
+                        userId,
+                        month,
+                        year
+                );
 
         return total != null ? total : 0.0;
     }
 
-    public DashboardResponse getDashboardStatistics(Long userId) {
+    public DashboardResponse getDashboardStatistics(
+            Long userId) {
 
-        Double totalExpense = expenseRepository.getTotalExpensesByUserId(userId);
-        Long expenseCount = expenseRepository.getExpenseCountByUserId(userId);
-        Double highestExpense = expenseRepository.getHighestExpense(userId);
-        Double lowestExpense = expenseRepository.getLowestExpense(userId);
-        Double averageExpense = expenseRepository.getAverageExpense(userId);
+        Double totalExpense =
+                expenseRepository.getTotalExpensesByUserId(userId);
+
+        Long expenseCount =
+                expenseRepository.getExpenseCountByUserId(userId);
+
+        Double highestExpense =
+                expenseRepository.getHighestExpense(userId);
+
+        Double lowestExpense =
+                expenseRepository.getLowestExpense(userId);
+
+        Double averageExpense =
+                expenseRepository.getAverageExpense(userId);
 
         return new DashboardResponse(
                 totalExpense != null ? totalExpense : 0.0,
@@ -176,52 +291,111 @@ public class ExpenseService {
         );
     }
 
-    public Page<Expense> getExpensesWithPagination(int page, int size) {
+    public Page<Expense> getExpensesWithPagination(
+            int page,
+            int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        User user = getLoggedInUser();
 
-        return expenseRepository.findAll(pageable);
+        Pageable pageable =
+                PageRequest.of(
+                        page,
+                        size,
+                        Sort.by("date").descending()
+                );
+
+        return expenseRepository.findByUserId(
+                user.getId(),
+                pageable
+        );
     }
 
-    public List<Expense> getExpensesSorted(String sortBy, String direction) {
+    public List<Expense> getExpensesSorted(
+            String sortBy,
+            String direction) {
 
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
+        User user = getLoggedInUser();
 
-        return expenseRepository.findAll(sort);
+        Sort sort;
+
+        if (direction.equalsIgnoreCase("desc")) {
+
+            sort = Sort.by(sortBy).descending();
+
+        } else {
+
+            sort = Sort.by(sortBy).ascending();
+        }
+
+        return expenseRepository.findByUserId(
+                user.getId(),
+                sort
+        );
     }
 
-    public byte[] exportExpensesToExcel() throws IOException {
+    public byte[] exportExpensesToExcel()
+            throws IOException {
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        User user = getLoggedInUser();
 
-        Sheet sheet = workbook.createSheet("Expenses");
+        XSSFWorkbook workbook =
+                new XSSFWorkbook();
 
-        Row header = sheet.createRow(0);
+        Sheet sheet =
+                workbook.createSheet("Expenses");
 
-        header.createCell(0).setCellValue("Title");
-        header.createCell(1).setCellValue("Category");
-        header.createCell(2).setCellValue("Amount");
-        header.createCell(3).setCellValue("Date");
-        header.createCell(4).setCellValue("Description");
+        Row header =
+                sheet.createRow(0);
 
-        List<Expense> expenses = expenseRepository.findAll();
+        header.createCell(0)
+                .setCellValue("Title");
+
+        header.createCell(1)
+                .setCellValue("Category");
+
+        header.createCell(2)
+                .setCellValue("Amount");
+
+        header.createCell(3)
+                .setCellValue("Date");
+
+        header.createCell(4)
+                .setCellValue("Description");
+
+        List<Expense> expenses =
+                expenseRepository.findByUserId(
+                        user.getId()
+                );
 
         int rowNumber = 1;
 
         for (Expense expense : expenses) {
 
-            Row row = sheet.createRow(rowNumber++);
+            Row row =
+                    sheet.createRow(rowNumber++);
 
-            row.createCell(0).setCellValue(expense.getTitle());
-            row.createCell(1).setCellValue(expense.getCategory());
-            row.createCell(2).setCellValue(expense.getAmount());
-            row.createCell(3).setCellValue(expense.getDate().toString());
-            row.createCell(4).setCellValue(expense.getDescription());
+            row.createCell(0)
+                    .setCellValue(expense.getTitle());
+
+            row.createCell(1)
+                    .setCellValue(expense.getCategory());
+
+            row.createCell(2)
+                    .setCellValue(expense.getAmount());
+
+            row.createCell(3)
+                    .setCellValue(
+                            expense.getDate().toString()
+                    );
+
+            row.createCell(4)
+                    .setCellValue(
+                            expense.getDescription()
+                    );
         }
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream =
+                new ByteArrayOutputStream();
 
         workbook.write(outputStream);
         workbook.close();

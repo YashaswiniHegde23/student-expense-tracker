@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
-    Budget findByUserIdAndMonthAndYear(Long userId, Integer month, Integer year);
+    Budget findByUserIdAndMonthAndYear(
+            Long userId,
+            Integer month,
+            Integer year
+    );
 }

@@ -5,6 +5,7 @@ public class BudgetStatusResponse {
     private Double budget;
     private Double totalSpent;
     private Double remainingBudget;
+    private Double percentage;
     private boolean budgetExceeded;
 
     public BudgetStatusResponse() {
@@ -32,6 +33,14 @@ public class BudgetStatusResponse {
 
     public void setRemainingBudget(Double remainingBudget) {
         this.remainingBudget = remainingBudget;
+    }
+
+    public Double getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
     }
 
     public boolean isBudgetExceeded() {

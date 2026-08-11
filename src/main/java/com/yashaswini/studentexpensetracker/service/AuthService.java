@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.yashaswini.studentexpensetracker.exception.ResourceNotFoundException;
+import com.yashaswini.studentexpensetracker.service.JwtService;
 
 
 @Service
@@ -18,6 +19,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     public String register(RegisterRequest request) {
 
@@ -47,6 +51,8 @@ public class AuthService {
             return "Incorrect Password";
         }
 
-        return "Login Successful";
+        String token = jwtService.generateToken(user.getEmail());
+
+        return token;
     }
 }

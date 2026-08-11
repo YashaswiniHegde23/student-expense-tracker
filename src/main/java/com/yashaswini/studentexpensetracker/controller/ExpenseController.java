@@ -1,21 +1,22 @@
 package com.yashaswini.studentexpensetracker.controller;
 
+import com.yashaswini.studentexpensetracker.dto.DashboardResponse;
 import com.yashaswini.studentexpensetracker.dto.ExpenseRequest;
 import com.yashaswini.studentexpensetracker.model.Expense;
 import com.yashaswini.studentexpensetracker.service.ExpenseService;
+
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import com.yashaswini.studentexpensetracker.dto.DashboardResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,47 +27,68 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @PostMapping
-    public String addExpense(@Valid @RequestBody ExpenseRequest request) {
+    public String addExpense(
+            @Valid @RequestBody ExpenseRequest request) {
+
         return expenseService.addExpense(request);
     }
 
     @GetMapping
     public List<Expense> getAllExpenses() {
+
         return expenseService.getAllExpenses();
     }
 
     @GetMapping("/{id}")
-    public Expense getExpenseById(@PathVariable Long id) {
+    public Expense getExpenseById(
+            @PathVariable Long id) {
+
         return expenseService.getExpenseById(id);
     }
 
     @PutMapping("/{id}")
-    public String updateExpense(@PathVariable Long id,
-                                @Valid @RequestBody ExpenseRequest request) {
-        return expenseService.updateExpense(id, request);
+    public String updateExpense(
+            @PathVariable Long id,
+            @Valid @RequestBody ExpenseRequest request) {
+
+        return expenseService.updateExpense(
+                id,
+                request
+        );
     }
 
     @DeleteMapping("/{id}")
-    public String deleteExpense(@PathVariable Long id) {
+    public String deleteExpense(
+            @PathVariable Long id) {
+
         return expenseService.deleteExpense(id);
     }
 
     @GetMapping("/category/{category}")
-    public List<Expense> getExpensesByCategory(@PathVariable String category) {
+    public List<Expense> getExpensesByCategory(
+            @PathVariable String category) {
 
-        return expenseService.getExpensesByCategory(category);
+        return expenseService.getExpensesByCategory(
+                category
+        );
     }
 
     @GetMapping("/search")
-    public List<Expense> searchExpenses(@RequestParam String title) {
+    public List<Expense> searchExpenses(
+            @RequestParam String title) {
 
-        return expenseService.searchExpensesByTitle(title);
+        return expenseService.searchExpensesByTitle(
+                title
+        );
     }
 
     @GetMapping("/date/{date}")
-    public List<Expense> getExpensesByDate(@PathVariable LocalDate date) {
+    public List<Expense> getExpensesByDate(
+            @PathVariable LocalDate date) {
 
-        return expenseService.getExpensesByDate(date);
+        return expenseService.getExpensesByDate(
+                date
+        );
     }
 
     @GetMapping("/date-range")
@@ -74,19 +96,28 @@ public class ExpenseController {
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate) {
 
-        return expenseService.getExpensesBetweenDates(startDate, endDate);
+        return expenseService.getExpensesBetweenDates(
+                startDate,
+                endDate
+        );
     }
 
     @GetMapping("/amount/greater")
-    public List<Expense> getExpensesGreaterThan(@RequestParam Double amount) {
+    public List<Expense> getExpensesGreaterThan(
+            @RequestParam Double amount) {
 
-        return expenseService.getExpensesGreaterThan(amount);
+        return expenseService.getExpensesGreaterThan(
+                amount
+        );
     }
 
     @GetMapping("/amount/less")
-    public List<Expense> getExpensesLessThan(@RequestParam Double amount) {
+    public List<Expense> getExpensesLessThan(
+            @RequestParam Double amount) {
 
-        return expenseService.getExpensesLessThan(amount);
+        return expenseService.getExpensesLessThan(
+                amount
+        );
     }
 
     @GetMapping("/amount/between")
@@ -94,25 +125,37 @@ public class ExpenseController {
             @RequestParam Double min,
             @RequestParam Double max) {
 
-        return expenseService.getExpensesBetweenAmounts(min, max);
+        return expenseService.getExpensesBetweenAmounts(
+                min,
+                max
+        );
     }
 
     @GetMapping("/user/{userId}/summary/total")
-    public Double getTotalExpenses(@PathVariable Long userId) {
+    public Double getTotalExpenses(
+            @PathVariable Long userId) {
 
-        return expenseService.getTotalExpenses(userId);
+        return expenseService.getTotalExpenses(
+                userId
+        );
     }
 
     @GetMapping("/user/{userId}/summary/count")
-    public Long getExpenseCount(@PathVariable Long userId) {
+    public Long getExpenseCount(
+            @PathVariable Long userId) {
 
-        return expenseService.getExpenseCount(userId);
+        return expenseService.getExpenseCount(
+                userId
+        );
     }
 
     @GetMapping("/user/{userId}/summary/category")
-    public Map<String, Double> getCategoryWiseSummary(@PathVariable Long userId) {
+    public Map<String, Double> getCategoryWiseSummary(
+            @PathVariable Long userId) {
 
-        return expenseService.getCategoryWiseSummary(userId);
+        return expenseService.getCategoryWiseSummary(
+                userId
+        );
     }
 
     @GetMapping("/user/{userId}/summary/month")
@@ -121,13 +164,20 @@ public class ExpenseController {
             @RequestParam int month,
             @RequestParam int year) {
 
-        return expenseService.getMonthlyExpenseSummary(userId, month, year);
+        return expenseService.getMonthlyExpenseSummary(
+                userId,
+                month,
+                year
+        );
     }
 
     @GetMapping("/user/{userId}/dashboard")
-    public DashboardResponse getDashboardStatistics(@PathVariable Long userId) {
+    public DashboardResponse getDashboardStatistics(
+            @PathVariable Long userId) {
 
-        return expenseService.getDashboardStatistics(userId);
+        return expenseService.getDashboardStatistics(
+                userId
+        );
     }
 
     @GetMapping("/pagination")
@@ -135,25 +185,38 @@ public class ExpenseController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
 
-        return expenseService.getExpensesWithPagination(page, size);
+        return expenseService.getExpensesWithPagination(
+                page,
+                size
+        );
     }
 
     @GetMapping("/sort")
     public List<Expense> getExpensesSorted(
             @RequestParam(defaultValue = "date") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
+            @RequestParam(defaultValue = "desc") String direction) {
 
-        return expenseService.getExpensesSorted(sortBy, direction);
+        return expenseService.getExpensesSorted(
+                sortBy,
+                direction
+        );
     }
 
     @GetMapping("/export/excel")
-    public ResponseEntity<byte[]> exportExpensesToExcel() throws IOException {
+    public ResponseEntity<byte[]> exportExpensesToExcel()
+            throws IOException {
 
-        byte[] excelData = expenseService.exportExpensesToExcel();
+        byte[] excelData =
+                expenseService.exportExpensesToExcel();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=expenses.xlsx")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=expenses.xlsx"
+                )
+                .contentType(
+                        MediaType.APPLICATION_OCTET_STREAM
+                )
                 .body(excelData);
     }
 }
