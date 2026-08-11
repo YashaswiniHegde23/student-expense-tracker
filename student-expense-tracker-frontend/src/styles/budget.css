@@ -1,0 +1,302 @@
+/* ============================= */
+/* BUDGET HEADER */
+/* ============================= */
+
+.budget-header {
+    margin-bottom: 25px;
+}
+
+.budget-header h1 {
+    color: white;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.budget-header p {
+    color: #9CA3AF;
+}
+
+/* ============================= */
+/* MONTH SELECTOR */
+/* ============================= */
+
+.budget-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.budget-selector div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.budget-selector label {
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+.budget-selector select {
+    min-width: 170px;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid #2d2d2d;
+    background: #111111;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.budget-selector select:focus {
+    border-color: #2563EB;
+}
+
+.budget-selector select option {
+    background: #111111;
+    color: white;
+}
+
+/* ============================= */
+/* BUDGET CARD */
+/* ============================= */
+
+.budget-card {
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.budget-card h2 {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 18px;
+}
+
+/* ============================= */
+/* BUDGET FORM */
+/* ============================= */
+
+.budget-form {
+    display: flex;
+    gap: 12px;
+}
+
+.budget-form input {
+    flex: 1;
+    min-width: 0;
+    height: 46px;
+    padding: 0 15px;
+    border-radius: 10px;
+    border: 1px solid #2d2d2d;
+    background: #0f0f0f;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.budget-form input:focus {
+    border-color: #2563EB;
+}
+
+.budget-form input::placeholder {
+    color: #777;
+}
+
+.budget-form button {
+    height: 46px;
+    background: #2563EB;
+    color: white;
+    border: none;
+    padding: 0 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+.budget-form button:hover {
+    background: #1d4ed8;
+}
+
+.budget-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ============================= */
+/* SUMMARY */
+/* ============================= */
+
+.budget-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.budget-stat {
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.budget-stat span {
+    display: block;
+    color: #9CA3AF;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.budget-stat strong {
+    color: white;
+    font-size: 23px;
+    word-break: break-word;
+}
+
+/* ============================= */
+/* STATUS */
+/* ============================= */
+
+.budget-stat strong.on-track {
+    color: #22c55e;
+}
+
+.budget-stat strong.warning {
+    color: #f59e0b;
+}
+
+.budget-stat strong.exceeded,
+.budget-stat strong.negative {
+    color: #ef4444;
+}
+
+.budget-stat strong.not-set {
+    color: #9CA3AF;
+}
+
+/* ============================= */
+/* PROGRESS */
+/* ============================= */
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.progress-header h2 {
+    margin: 0;
+}
+
+.progress-header span {
+    color: white;
+    font-weight: 600;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 14px;
+    background: #2a2a2a;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #2563EB;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
+.progress-fill.warning {
+    background: #f59e0b;
+}
+
+.progress-fill.exceeded {
+    background: #ef4444;
+}
+
+.budget-description {
+    color: #9CA3AF;
+    margin-top: 14px;
+    font-size: 14px;
+}
+
+/* ============================= */
+/* LOADING */
+/* ============================= */
+
+.budget-message {
+    color: #9CA3AF;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 900px) {
+    .budget-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .budget-selector {
+        flex-direction: column;
+    }
+
+    .budget-selector select {
+        width: 100%;
+    }
+
+    .budget-form {
+        flex-direction: column;
+    }
+
+    .budget-form button {
+        width: 100%;
+    }
+
+    .budget-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .budget-card {
+        padding: 20px;
+    }
+}
+
+/* Remove number input spinner buttons */
+.budget-form input[type="number"]::-webkit-inner-spin-button,
+.budget-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.budget-form input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.budget-form input[type="number"]::-webkit-inner-spin-button,
+.budget-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.budget-form input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}

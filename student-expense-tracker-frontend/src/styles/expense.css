@@ -1,0 +1,549 @@
+/* ============================= */
+/* ADD EXPENSE FORM */
+/* ============================= */
+
+.expense-form {
+    width: 100%;
+    max-width: 650px;
+    box-sizing: border-box;
+    background: #171717;
+    padding: 30px;
+    border-radius: 22px;
+    border: 1px solid #2a2a2a;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.expense-form h2 {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.expense-form input,
+.expense-form textarea,
+.expense-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #2d2d2d;
+    background: #0f0f0f;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.expense-form input:focus,
+.expense-form textarea:focus,
+.expense-form select:focus {
+    border-color: #2563EB;
+}
+
+.expense-form select option {
+    background: #0f0f0f;
+    color: white;
+}
+
+.expense-form textarea {
+    min-height: 120px;
+    resize: none;
+}
+
+.expense-form button {
+    background: #2563EB;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+.expense-form button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+/* ============================= */
+/* EXPENSE HEADER */
+/* ============================= */
+
+.expense-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.expense-header h1 {
+    color: white;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.expense-header p {
+    color: #9CA3AF;
+}
+
+.add-expense-btn {
+    flex-shrink: 0;
+    background: #2563EB;
+    color: white;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.25s ease;
+}
+
+.add-expense-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+/* ============================= */
+/* FILTER SECTION */
+/* ============================= */
+
+.expense-search {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+}
+
+.filter-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 2fr)
+        minmax(140px, 1fr)
+        minmax(140px, 1fr)
+        minmax(140px, 1fr);
+
+    gap: 10px;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-row input,
+.filter-row select {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 12px;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 9px;
+
+    background: #111111;
+    color: white;
+
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.filter-row input:focus,
+.filter-row select:focus {
+    border-color: #2563EB;
+}
+
+.filter-row input::placeholder {
+    color: #888;
+}
+
+.filter-row select option {
+    background: #111111;
+    color: white;
+}
+
+.filter-row input[type="date"] {
+    color-scheme: dark;
+}
+
+/* ============================= */
+/* AMOUNT ROW */
+/* ============================= */
+
+.amount-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(140px, 180px)
+        minmax(140px, 180px);
+
+    gap: 10px;
+    margin-top: 10px;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.amount-row input {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 12px;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 9px;
+
+    background: #111111;
+    color: white;
+
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+}
+
+.amount-row input:focus {
+    border-color: #2563EB;
+}
+
+.amount-row input::placeholder {
+    color: #888;
+}
+
+/* ============================= */
+/* FILTER BUTTONS */
+/* ============================= */
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filter-buttons button {
+    height: 42px;
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #2563EB;
+    color: white;
+
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.filter-buttons button:hover {
+    background: #1d4ed8;
+}
+
+/* ============================= */
+/* SORT + EXPORT */
+/* ============================= */
+
+.expense-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+}
+
+.expense-controls select {
+    height: 42px;
+    min-width: 150px;
+    padding: 0 12px;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 9px;
+
+    background: #111111;
+    color: white;
+
+    box-sizing: border-box;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.expense-controls select:focus {
+    border-color: #2563EB;
+}
+
+.expense-controls select option {
+    background: #111111;
+    color: white;
+}
+
+.expense-controls button {
+    height: 42px;
+    padding: 0 18px;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 9px;
+
+    background: #111111;
+    color: white;
+
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.expense-controls button:hover {
+    background: #1f1f1f;
+    border-color: #444;
+}
+
+.sort-btn,
+.export-btn {
+    min-width: 100px;
+}
+
+/* ============================= */
+/* EXPENSE TABLE */
+/* ============================= */
+
+.expense-list {
+    width: 100%;
+    box-sizing: border-box;
+
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 22px;
+    padding: 25px;
+
+    overflow-x: auto;
+}
+
+.expense-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.expense-table th {
+    color: #9CA3AF;
+    text-align: left;
+    padding: 16px;
+
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.expense-table td {
+    color: white;
+    padding: 17px 16px;
+    border-bottom: 1px solid #222;
+}
+
+.expense-table tbody tr {
+    transition: 0.2s ease;
+}
+
+.expense-table tbody tr:hover {
+    background: #1c1c1c;
+}
+
+/* ============================= */
+/* MESSAGES */
+/* ============================= */
+
+.expense-message {
+    color: #9CA3AF;
+    text-align: center;
+    padding: 40px;
+}
+
+/* ============================= */
+/* EDIT BUTTON */
+/* ============================= */
+
+.edit-btn {
+    background: #2563EB;
+    color: white;
+    border: none;
+
+    padding: 9px 14px;
+    border-radius: 9px;
+
+    cursor: pointer;
+    margin-right: 8px;
+
+    transition: 0.2s ease;
+}
+
+.edit-btn:hover {
+    background: #1d4ed8;
+}
+
+/* ============================= */
+/* DELETE BUTTON */
+/* ============================= */
+
+.delete-btn {
+    background: #2a2a2a;
+    color: #ef4444;
+
+    border: 1px solid #3a3a3a;
+
+    padding: 9px 14px;
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* ============================= */
+/* PAGINATION */
+/* ============================= */
+
+.expense-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.expense-pagination button {
+    background: #111111;
+    color: white;
+
+    border: 1px solid #2d2d2d;
+
+    padding: 10px 18px;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.expense-pagination button:hover:not(:disabled) {
+    background: #1f1f1f;
+}
+
+.expense-pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.expense-pagination span {
+    color: #9CA3AF;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 1000px) {
+    .filter-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .amount-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .expense-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .add-expense-btn {
+        width: 100%;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .amount-row {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-buttons {
+        width: 100%;
+    }
+
+    .filter-buttons button {
+        flex: 1;
+    }
+
+    .expense-controls {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .expense-controls select,
+    .expense-controls button {
+        width: 100%;
+    }
+
+    .expense-list {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    .expense-form {
+        padding: 22px;
+    }
+
+    .expense-header h1 {
+        font-size: 26px;
+    }
+}
+
+/* Remove number input spinner buttons */
+.amount-row input[type="number"]::-webkit-inner-spin-button,
+.amount-row input[type="number"]::-webkit-outer-spin-button,
+.expense-form input[type="number"]::-webkit-inner-spin-button,
+.expense-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.amount-row input[type="number"],
+.expense-form input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ============================= */
+/* REMOVE NUMBER SPINNERS */
+/* ============================= */
+
+.amount-row input[type="number"]::-webkit-inner-spin-button,
+.amount-row input[type="number"]::-webkit-outer-spin-button,
+.expense-form input[type="number"]::-webkit-inner-spin-button,
+.expense-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.amount-row input[type="number"],
+.expense-form input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
